@@ -9,6 +9,9 @@
             prefix-icon="el-icon-search"
             v-model="search"
             clearable></el-input>
+        <div class="nav__icon-group">
+            <i class="el-icon-bell"></i>
+        </div>
     </el-menu>
 </template>
 
@@ -26,7 +29,7 @@ export default class TheNav extends Vue {
 
     .nav {
         display: flex;
-        align-items: baseline;
+        align-items: center;
         padding: 10px 0;
         position: relative;
     }
@@ -47,5 +50,19 @@ export default class TheNav extends Vue {
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
+    }
+
+    .nav__icon-group {
+        outline: none;
+        font-size: 1.5rem;
+        position: absolute;
+        right: 15%;
+    }
+
+    .nav__icon-group > i {
+        cursor: pointer;
+        &:hover {
+            color: $brand-color;
+        }
     }
 </style>
