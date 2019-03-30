@@ -13,9 +13,13 @@
                               type="password"></el-input>
                 </el-form-item>
                 <el-form-item>
-                    <el-button type="primary">Sign in</el-button>
+                    <el-button type="primary">{{ buttonContent }}</el-button>
                 </el-form-item>
             </el-form>
+            <p class="form__support" :class="{'form__support--light': !isLogIn}">
+                {{ supportContent }}
+                <span class="form__link" @click="toggleLogIn">{{ linkContent }}</span>
+            </p>
         </main>
     </div>
 </template>
@@ -32,6 +36,24 @@ export default class TheLogin extends Vue {
         firstName: '',
         lastName: '',
     };
+
+    isLogIn = true;
+
+    toggleLogIn(this: TheLogin): void {
+        this.isLogIn = !this.isLogIn;
+    }
+
+    get supportContent(): string {
+        return this.isLogIn ? 'Don\'t have an account?' : 'Have an account?';
+    }
+
+    get buttonContent(): string {
+        return this.isLogIn ? 'Log In' : 'Sign Up';
+    }
+
+    get linkContent(): string {
+        return this.isLogIn ? 'Sign up' : 'Log in';
+    }
 }
 </script>
 
@@ -54,6 +76,21 @@ export default class TheLogin extends Vue {
     }
 
     .form__header {
+        font-family: 'Avenir', Helvetica, Arial, sans-serif;
         text-align: center;
+    }
+
+    .form__support {
+        color: $main-text-color;
+        text-align: center;
+    }
+
+    .form__support--light {
+        color: $support-text-color;
+    }
+
+    .form__link {
+        color: $brand-color;
+        cursor: pointer;
     }
 </style>
