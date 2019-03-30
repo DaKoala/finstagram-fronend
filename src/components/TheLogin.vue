@@ -4,39 +4,54 @@
             <h1 class="form__header">Finstagram</h1>
             <h2 class="form__subheader"
                 v-if="!isLogIn">Sign up to see photos and videos from your friends.</h2>
-            <el-form :model="user" :rules="formRules" :key="isLogIn">
+            <el-form
+                :model="user"
+                :rules="formRules"
+                :key="isLogIn">
                 <el-form-item prop="username">
-                    <el-input v-model="user.username"
-                              placeholder="Username"></el-input>
+                    <el-input
+                        v-model="user.username"
+                        placeholder="Username"></el-input>
                 </el-form-item>
                 <el-form-item prop="password">
-                    <el-input v-model="user.password"
-                              placeholder="Password"
-                              type="password"></el-input>
+                    <el-input
+                        v-model="user.password"
+                        placeholder="Password"
+                        type="password"></el-input>
                 </el-form-item>
-                <el-form-item v-if="!isLogIn"
-                              prop="confirmPassword">
-                    <el-input v-model="user.confirmPassword"
-                              placeholder="Confirm Password"
-                              type="password"></el-input>
+                <el-form-item
+                    v-if="!isLogIn"
+                    prop="confirmPassword">
+                    <el-input
+                        v-model="user.confirmPassword"
+                        placeholder="Confirm Password"
+                        type="password"></el-input>
                 </el-form-item>
-                <el-form-item v-if="!isLogIn"
-                              prop="firstName">
-                    <el-input v-model="user.firstName"
-                              placeholder="First Name"></el-input>
+                <el-form-item
+                    v-if="!isLogIn"
+                    prop="firstName">
+                    <el-input
+                        v-model="user.firstName"
+                        placeholder="First Name"></el-input>
                 </el-form-item>
-                <el-form-item v-if="!isLogIn"
-                              prop="lastName">
-                    <el-input v-model="user.lastName"
-                              placeholder="Last Name"></el-input>
+                <el-form-item
+                    v-if="!isLogIn"
+                    prop="lastName">
+                    <el-input
+                        v-model="user.lastName"
+                        placeholder="Last Name"></el-input>
                 </el-form-item>
                 <el-form-item>
                     <el-button type="primary">{{ buttonContent }}</el-button>
                 </el-form-item>
             </el-form>
-            <p class="form__support" :class="{'form__support--light': !isLogIn}">
+            <p
+                class="form__support"
+                :class="{'form__support--light': !isLogIn}">
                 {{ supportContent }}
-                <span class="form__link" @click="toggleLogIn">{{ linkContent }}</span>
+                <span
+                    class="form__link"
+                    @click="toggleLogIn">{{ linkContent }}</span>
             </p>
         </main>
     </div>
@@ -173,7 +188,7 @@ export default class TheLogin extends Vue {
     }
 
     .form__header {
-        font-family: 'Avenir', Helvetica, Arial, sans-serif;
+        @include finstagram;
         text-align: center;
     }
 

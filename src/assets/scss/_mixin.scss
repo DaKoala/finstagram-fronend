@@ -3,3 +3,10 @@
   justify-content: center;
   align-items: center;
 }
+
+@mixin finstagram {
+  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  color: black;
+  user-select: none;
+  outline: none;
+}
