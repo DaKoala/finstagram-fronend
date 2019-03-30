@@ -42,7 +42,7 @@
                         placeholder="Last Name"></el-input>
                 </el-form-item>
                 <el-form-item>
-                    <el-button type="primary">{{ buttonContent }}</el-button>
+                    <el-button type="primary" @click="submitForm">{{ buttonContent }}</el-button>
                 </el-form-item>
             </el-form>
             <p
@@ -59,6 +59,7 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
+import { login, register } from '@/service/api';
 
 @Component
 export default class TheLogin extends Vue {
@@ -74,6 +75,16 @@ export default class TheLogin extends Vue {
 
         toggleLogIn(this: TheLogin): void {
             this.isLogIn = !this.isLogIn;
+        }
+
+        submitForm(this: TheLogin): void {
+            if (this.isLogIn) {
+                this.submitLogin();
+            }
+        }
+
+        async submitLogin(this: TheLogin): Promise<any> {
+            const res = await login(this.user.username, this.user.password);
         }
 
         get formRules(): void | object {
