@@ -15,3 +15,11 @@ import TheLogin from '@/components/TheLogin.vue';
 })
 export default class Home extends Vue {}
 </script>
+
+<style lang="scss" scoped>
+    .home {
+        display: flex;
+        justify-content: center;
+        margin-top: 20vh;
+    }
+</style>

@@ -47,110 +47,110 @@ import { Component, Vue } from 'vue-property-decorator';
 
 @Component
 export default class TheLogin extends Vue {
-    user = {
-        username: '',
-        password: '',
-        confirmPassword: '',
-        firstName: '',
-        lastName: '',
-    };
+        user = {
+            username: '',
+            password: '',
+            confirmPassword: '',
+            firstName: '',
+            lastName: '',
+        };
 
-    isLogIn = true;
+        isLogIn = true;
 
-    toggleLogIn(this: TheLogin): void {
-        this.isLogIn = !this.isLogIn;
-    }
-
-    get formRules(): void | object {
-        if (this.isLogIn) {
-            return undefined;
+        toggleLogIn(this: TheLogin): void {
+            this.isLogIn = !this.isLogIn;
         }
-        type Callback = (e?: Error) => void;
-        const validatePassword = (rule: any, value: string, callback: Callback): void => {
-            if (value === '') {
-                callback(new Error('Please confirm your password'));
-            } else if (value !== this.user.password) {
-                callback(new Error('Passwords are not consistent!'));
-            } else {
-                callback();
+
+        get formRules(): void | object {
+            if (this.isLogIn) {
+                return undefined;
             }
-        };
-        return {
-            username: [
-                {
-                    required: true,
-                    message: 'Please enter a username',
-                    trigger: 'blur',
-                },
-                {
-                    min: 6,
-                    max: 20,
-                    message: 'Length should between 6 to 20 characters',
-                    trigger: 'blur',
-                },
-            ],
-            password: [
-                {
-                    required: true,
-                    message: 'Please enter a password',
-                    trigger: 'blur',
-                },
-                {
-                    min: 6,
-                    max: 16,
-                    message: 'Length should between 6 to 16 characters',
-                    trigger: 'blur',
-                },
-            ],
-            confirmPassword: [
-                {
-                    required: true,
-                    message: 'Please confirm your password',
-                    trigger: 'blur',
-                },
-                {
-                    validator: validatePassword,
-                    trigger: 'blur',
-                },
-            ],
-            firstName: [
-                {
-                    required: true,
-                    message: 'Please enter your first name',
-                    trigger: 'blur',
-                },
-                {
-                    max: 20,
-                    message: 'Length should no larger than 20 characters',
-                    trigger: 'blur',
-                },
-            ],
-            lastName: [
-                {
-                    required: true,
-                    message: 'Please enter your last name',
-                    trigger: 'blur',
-                },
-                {
-                    max: 20,
-                    message: 'Length should no larger than 20 characters',
-                    trigger: 'blur',
-                },
-            ],
-        };
-    }
+            type Callback = (e?: Error) => void;
+            const validatePassword = (rule: any, value: string, callback: Callback): void => {
+                if (value === '') {
+                    callback(new Error('Please confirm your password'));
+                } else if (value !== this.user.password) {
+                    callback(new Error('Passwords are not consistent!'));
+                } else {
+                    callback();
+                }
+            };
+            return {
+                username: [
+                    {
+                        required: true,
+                        message: 'Please enter a username',
+                        trigger: 'blur',
+                    },
+                    {
+                        min: 6,
+                        max: 20,
+                        message: 'Length should between 6 to 20 characters',
+                        trigger: 'blur',
+                    },
+                ],
+                password: [
+                    {
+                        required: true,
+                        message: 'Please enter a password',
+                        trigger: 'blur',
+                    },
+                    {
+                        min: 6,
+                        max: 16,
+                        message: 'Length should between 6 to 16 characters',
+                        trigger: 'blur',
+                    },
+                ],
+                confirmPassword: [
+                    {
+                        required: true,
+                        message: 'Please confirm your password',
+                        trigger: 'blur',
+                    },
+                    {
+                        validator: validatePassword,
+                        trigger: 'blur',
+                    },
+                ],
+                firstName: [
+                    {
+                        required: true,
+                        message: 'Please enter your first name',
+                        trigger: 'blur',
+                    },
+                    {
+                        max: 20,
+                        message: 'Length should no larger than 20 characters',
+                        trigger: 'blur',
+                    },
+                ],
+                lastName: [
+                    {
+                        required: true,
+                        message: 'Please enter your last name',
+                        trigger: 'blur',
+                    },
+                    {
+                        max: 20,
+                        message: 'Length should no larger than 20 characters',
+                        trigger: 'blur',
+                    },
+                ],
+            };
+        }
 
-    get supportContent(): string {
-        return this.isLogIn ? 'Don\'t have an account?' : 'Have an account?';
-    }
+        get supportContent(): string {
+            return this.isLogIn ? 'Don\'t have an account?' : 'Have an account?';
+        }
 
-    get buttonContent(): string {
-        return this.isLogIn ? 'Log In' : 'Sign Up';
-    }
+        get buttonContent(): string {
+            return this.isLogIn ? 'Log In' : 'Sign Up';
+        }
 
-    get linkContent(): string {
-        return this.isLogIn ? 'Sign up' : 'Log in';
-    }
+        get linkContent(): string {
+            return this.isLogIn ? 'Sign up' : 'Log in';
+        }
 }
 </script>
 
