@@ -1,9 +1,21 @@
+import Vue from 'vue';
 import ajax from './ajax';
 
 export function authorize(): Promise<any> {
     return ajax({
         url: '/authorize',
     });
+}
+
+export async function authorizeBeforeLoad(app: Vue) {
+    try {
+        const res = await authorize();
+        if (res.data.code !== 200) {
+            app.$router.push('/');
+        }
+    } catch (e) {
+        app.$router.push('/');
+    }
 }
 
 export function login(username: string, password: string): Promise<any> {
