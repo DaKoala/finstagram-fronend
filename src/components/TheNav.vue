@@ -2,7 +2,9 @@
     <el-menu
         mode="horizontal"
         class="nav">
-        <h1 class="nav__header">Finstagram</h1>
+        <router-link
+            to="/dashboard"
+            class="nav__header">Finstagram</router-link>
         <el-input
             class="nav__search"
             placeholder="Search"
@@ -10,7 +12,8 @@
             v-model="search"
             clearable></el-input>
         <div class="nav__icon-group">
-            <i class="el-icon-bell"></i>
+            <i class="el-icon-circle-plus-outline icon--plus" title="Post Photo"></i>
+            <i class="el-icon-bell" title="Follower Requests"></i>
         </div>
     </el-menu>
 </template>
@@ -41,6 +44,9 @@ export default class TheNav extends Vue {
     .nav__header {
         @include finstagram;
         margin-left: 10%;
+        text-decoration: none;
+        font-size: 2rem;
+        font-weight: bold;
     }
 
     .nav__search {
@@ -57,12 +63,19 @@ export default class TheNav extends Vue {
         font-size: 1.5rem;
         position: absolute;
         right: 15%;
+        display: flex;
+        align-items: center;
     }
 
     .nav__icon-group > i {
         cursor: pointer;
+        margin: 0 10px;
         &:hover {
             color: $brand-color;
         }
+    }
+
+    .nav__icon-group > .icon--plus {
+        font-size: 2.5rem;
     }
 </style>
