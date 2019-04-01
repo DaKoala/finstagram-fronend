@@ -10,7 +10,8 @@ export function authorize(): Promise<any> {
 export async function authorizeBeforeLoad(app: Vue) {
     try {
         const res = await authorize();
-        if (res.data.code !== 200) {
+        console.log(res.data);
+        if (res.data.status !== 200) {
             app.$router.push('/');
         }
     } catch (e) {
