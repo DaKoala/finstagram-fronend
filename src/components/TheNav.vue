@@ -17,19 +17,41 @@
                 title="Post Photo"
                 @click="toAddPost"></i>
             <i class="el-icon-bell" title="Follower Requests"></i>
+            <el-dropdown>
+                <i class="el-icon-more"></i>
+                <el-dropdown-menu slot="dropdown">
+                    <el-dropdown-item @click.native="handleLogOut">Log out</el-dropdown-item>
+                </el-dropdown-menu>
+            </el-dropdown>
         </div>
     </el-menu>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
+import { logout } from '@/service/api';
 
 @Component
 export default class TheNav extends Vue {
     search = '';
 
+    $message: any;
+
     toAddPost(this: TheNav) {
         this.$router.push('/add-post');
+    }
+
+    async handleLogOut(this: TheNav) {
+        const res = await logout();
+        const { data } = res;
+        if (data.status === 200) {
+            this.$router.push('/');
+        } else {
+            this.$message({
+                message: data.msg,
+                type: 'error',
+            });
+        }
     }
 }
 </script>
@@ -67,22 +89,18 @@ export default class TheNav extends Vue {
 
     .nav__icon-group {
         outline: none;
-        font-size: 1.5rem;
         position: absolute;
         right: 15%;
         display: flex;
         align-items: center;
     }
 
-    .nav__icon-group > i {
+    .nav__icon-group i {
+        font-size: 2rem;
         cursor: pointer;
         margin: 0 10px;
         &:hover {
             color: $brand-color;
         }
-    }
-
-    .nav__icon-group > .icon--plus {
-        font-size: 2.5rem;
     }
 </style>

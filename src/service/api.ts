@@ -30,6 +30,12 @@ export function login(username: string, password: string): Promise<any> {
     });
 }
 
+export function logout(): Promise<any> {
+    return ajax({
+        url: '/logout',
+    });
+}
+
 export function checkUsername(username: string): Promise<any> {
     return ajax({
         method: 'post',
