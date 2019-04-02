@@ -58,3 +58,15 @@ export function register(params: registerParams): Promise<any> {
         },
     });
 }
+
+export function addPost(fileName: string, caption: string, allFollowers: boolean): Promise<any> {
+    return ajax({
+        method: 'post',
+        url: '/uploadPost',
+        data: {
+            fileName,
+            caption,
+            allFollowers,
+        },
+    });
+}

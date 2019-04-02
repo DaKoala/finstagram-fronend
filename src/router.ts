@@ -16,5 +16,10 @@ export default new Router({
             name: 'dashboard',
             component: () => import('./views/Dashboard.vue'),
         },
+        {
+            path: '/add-post',
+            name: 'add-post',
+            component: () => import('./views/AddPost.vue'),
+        },
     ],
 });

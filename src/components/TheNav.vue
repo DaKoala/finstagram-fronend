@@ -12,7 +12,10 @@
             v-model="search"
             clearable></el-input>
         <div class="nav__icon-group">
-            <i class="el-icon-circle-plus-outline icon--plus" title="Post Photo"></i>
+            <i
+                class="el-icon-circle-plus-outline icon--plus"
+                title="Post Photo"
+                @click="toAddPost"></i>
             <i class="el-icon-bell" title="Follower Requests"></i>
         </div>
     </el-menu>
@@ -24,6 +27,10 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 @Component
 export default class TheNav extends Vue {
     search = '';
+
+    toAddPost(this: TheNav) {
+        this.$router.push('/add-post');
+    }
 }
 </script>
 

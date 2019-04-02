@@ -4,7 +4,7 @@ import BASE_URL from './config';
 axios.defaults.withCredentials = true;
 
 interface AjaxData {
-    [key: string]: string | number;
+    [key: string]: string | number | boolean;
 }
 
 interface AjaxConfig {
