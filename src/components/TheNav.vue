@@ -35,8 +35,6 @@ import { logout } from '@/service/api';
 export default class TheNav extends Vue {
     search = '';
 
-    $message: any;
-
     toAddPost(this: TheNav) {
         this.$router.push('/add-post');
     }

@@ -19,7 +19,8 @@
                     <el-input
                         v-model="user.password"
                         placeholder="Password"
-                        type="password"></el-input>
+                        type="password"
+                        @keyup.enter.native="submitForm"></el-input>
                 </el-form-item>
                 <el-form-item
                     v-if="!isLogIn"
@@ -41,7 +42,8 @@
                     prop="lastName">
                     <el-input
                         v-model="user.lastName"
-                        placeholder="Last Name"></el-input>
+                        placeholder="Last Name"
+                        @keyup.enter.native="submitForm"></el-input>
                 </el-form-item>
                 <el-form-item>
                     <el-button type="primary" @click="submitForm">{{ buttonContent }}</el-button>

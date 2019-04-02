@@ -70,8 +70,6 @@ export default class AddPost extends Vue {
 
     buttonDisabled = false;
 
-    $message: any;
-
     async created(this: AddPost) {
         authorizeBeforeLoad(this);
     }

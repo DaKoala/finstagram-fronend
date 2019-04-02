@@ -10,7 +10,13 @@ export function authorize(): Promise<any> {
 export async function authorizeBeforeLoad(app: Vue) {
     try {
         const res = await authorize();
-        if (res.data.status !== 200) {
+        const { data } = res;
+        if (data.status === 200) {
+            app.$store.commit('updateInfo', {
+                username: data.username,
+                avatar: data.avatar,
+            });
+        } else {
             app.$router.push('/');
         }
     } catch (e) {

@@ -6,6 +6,12 @@ import './plugins/element';
 
 Vue.config.productionTip = false;
 
+declare module 'vue/types/vue' {
+    interface Vue {
+        $message: (params: { message: string, type?: string }) => void;
+    }
+}
+
 new Vue({
     router,
     store,
