@@ -18,9 +18,17 @@
                 @click="toAddPost"></i>
             <i class="el-icon-bell" title="Follower Requests"></i>
             <el-dropdown>
-                <i class="el-icon-more"></i>
+                <img class="nav__avatar" :src="$store.state.avatar" alt="Avatar">
                 <el-dropdown-menu slot="dropdown">
-                    <el-dropdown-item @click.native="handleLogOut">Log out</el-dropdown-item>
+                    <el-dropdown-item disabled>
+                        <span class="nav__username">
+                            Signed in as
+                            <span class="nav__username--strong">{{$store.state.username}}</span>
+                        </span>
+                    </el-dropdown-item>
+                    <el-dropdown-item
+                        @click.native="handleLogOut"
+                        divided>Log out</el-dropdown-item>
                 </el-dropdown-menu>
             </el-dropdown>
         </div>
@@ -85,12 +93,29 @@ export default class TheNav extends Vue {
         transform: translate(-50%, -50%);
     }
 
+    .nav__avatar {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        margin: 0 10px;
+        cursor: pointer;
+    }
+
     .nav__icon-group {
         outline: none;
         position: absolute;
         right: 15%;
         display: flex;
         align-items: center;
+    }
+
+    .nav__username {
+        color: $main-text-color;
+    }
+
+    .nav__username--strong {
+        color: black;
+        font-weight: bold;
     }
 
     .nav__icon-group i {
