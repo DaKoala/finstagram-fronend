@@ -1,7 +1,15 @@
 <template>
     <div>
         <TheNav></TheNav>
-
+        <main class="container">
+            <div class="basic">
+                <img class="basic__avatar" :src="user.avatar" alt="Avatar"/>
+                <div class="basic__text">
+                    <span class="basic__username">{{ user.username }}</span>
+                    <el-button>Follow</el-button>
+                </div>
+            </div>
+        </main>
     </div>
 </template>
 
@@ -28,7 +36,7 @@ export default class User extends Vue {
     async created(this: User) {
         await authorizeBeforeLoad(this);
         const { data } = await fetchUserInfo(this.$route.params.username);
-        if (data.status === 200) {
+        if (data.status === 200 && data.user) {
             this.setUserInfo(data.user);
         } else {
             this.$message({
@@ -55,4 +63,30 @@ export default class User extends Vue {
 <style lang="scss" scoped>
     @import '../assets/scss/main';
 
+    .container {
+        width: 50%;
+        margin: 40px auto 0 auto;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .basic {
+        display: flex;
+        justify-content: center;
+    }
+
+    .basic__avatar {
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
+    }
+
+    .basic__text {
+        margin-left: 50px;
+        padding: 20px 0;
+    }
+
+    .basic__username {
+        font-size: 30px;
+    }
 </style>
