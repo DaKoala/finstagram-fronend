@@ -5,8 +5,10 @@
             <div class="basic">
                 <img class="basic__avatar" :src="user.avatar" alt="Avatar"/>
                 <div class="basic__text">
-                    <span class="basic__username">{{ user.username }}</span>
-                    <el-button>Follow</el-button>
+                    <div class="basic__line">
+                        <span class="basic__username">{{ user.username }}</span>
+                        <el-button>Follow</el-button>
+                    </div>
                 </div>
             </div>
         </main>
@@ -16,8 +18,14 @@
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import TheNav from '@/components/TheNav.vue';
-import { authorizeBeforeLoad, fetchUserInfo } from '@/service/api';
+import { authorizeBeforeLoad, fetchUserInfo, getFollowState } from '@/service/api';
 import resolveImagePath from '@/utils/resolve-image-path';
+
+enum FollowState {
+    Unaccepted,
+    Accepted,
+    Unfollowed,
+}
 
 @Component({
     components: {
@@ -25,12 +33,16 @@ import resolveImagePath from '@/utils/resolve-image-path';
     },
 })
 export default class User extends Vue {
+    isMyself = false;
+
     user: {
+        followState: FollowState,
         avatar: string,
-        [key: string]: string | boolean,
+        [key: string]: string | boolean | number,
     } = {
         username: '',
         avatar: '',
+        followState: FollowState.Accepted,
     };
 
     async created(this: User) {
@@ -38,12 +50,29 @@ export default class User extends Vue {
         const { data } = await fetchUserInfo(this.$route.params.username);
         if (data.status === 200 && data.user) {
             this.setUserInfo(data.user);
+            this.checkMyself();
+            if (this.isMyself) { return; }
         } else {
             this.$message({
                 message: data.msg,
                 type: 'error',
             });
+            return;
         }
+        const res = await getFollowState(this.$route.params.username);
+        const followData = res.data;
+        if (data.status === 200) {
+            this.user.followState = followData.requestState;
+        } else {
+            this.$message({
+                message: followData.msg,
+                type: 'error',
+            });
+        }
+    }
+
+    checkMyself(this: User): void {
+        this.isMyself = this.user.username === this.$store.state.username;
     }
 
     setUserInfo(this: User, user: { avatar: string, [key: string]: string | boolean }) {
@@ -76,8 +105,8 @@ export default class User extends Vue {
     }
 
     .basic__avatar {
-        width: 200px;
-        height: 200px;
+        width: 150px;
+        height: 150px;
         border-radius: 50%;
     }
 
@@ -86,7 +115,13 @@ export default class User extends Vue {
         padding: 20px 0;
     }
 
+    .basic__line {
+        display: flex;
+        align-items: center;
+    }
+
     .basic__username {
         font-size: 30px;
+        margin-right: 20px;
     }
 </style>

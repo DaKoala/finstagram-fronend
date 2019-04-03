@@ -99,3 +99,12 @@ export function fetchUserInfo(username: string): Promise<any> {
         },
     });
 }
+
+export function getFollowState(followee: string): Promise<any> {
+    return ajax({
+        url: '/getFollowState',
+        data: {
+            followee,
+        },
+    });
+}
