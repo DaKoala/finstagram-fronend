@@ -81,3 +81,12 @@ export function addPost(fileName: string, caption: string, allFollowers: boolean
         },
     });
 }
+
+export function searchFriend(username: string): Promise<any> {
+    return ajax({
+        url: '/searchFriend',
+        data: {
+            username,
+        },
+    });
+}

@@ -12,13 +12,22 @@ interface AjaxConfig {
     url: string;
     data?: AjaxData,
     headers?: AjaxData,
+    params?: AjaxData,
 }
 
 function ajax(config: AjaxConfig): Promise<any> {
+    let params;
+    let bodyData;
+    if (config.method === undefined || config.method.toLowerCase() === 'get') {
+        params = config.data;
+    } else {
+        bodyData = config.data;
+    }
     return axios({
         method: config.method || 'get',
         url: `${BASE_URL}${config.url}`,
-        data: config.data,
+        data: bodyData,
+        params,
         headers: config.headers,
     });
 }

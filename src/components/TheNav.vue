@@ -5,12 +5,13 @@
         <router-link
             to="/dashboard"
             class="nav__header">Finstagram</router-link>
-        <el-input
+        <el-autocomplete
             class="nav__search"
             placeholder="Search"
             prefix-icon="el-icon-search"
-            v-model="search"
-            clearable></el-input>
+            v-model="searchQuery"
+            :fetch-suggestions="handleSearch"
+            clearable></el-autocomplete>
         <div class="nav__icon-group">
             <i
                 class="el-icon-circle-plus-outline icon--plus"
@@ -37,11 +38,13 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
-import { logout } from '@/service/api';
+import { logout, searchFriend } from '@/service/api';
 
 @Component
 export default class TheNav extends Vue {
-    search = '';
+    searchQuery = '';
+
+    timeout: any = null;
 
     toAddPost(this: TheNav) {
         this.$router.push('/add-post');
@@ -57,6 +60,27 @@ export default class TheNav extends Vue {
                 message: data.msg,
                 type: 'error',
             });
+        }
+    }
+
+    handleSearch(this: TheNav, queryString: string, cb: (results: []) => void) {
+        clearTimeout(this.timeout);
+        if (queryString === '') {
+            cb([]);
+        } else {
+            this.timeout = setTimeout(async () => {
+                const res = await searchFriend(queryString);
+                const { data } = res;
+                if (data.status === 200) {
+                    cb(data.users);
+                } else {
+                    cb([]);
+                    this.$message({
+                        message: data.msg,
+                        type: 'error',
+                    });
+                }
+            }, 1000);
         }
     }
 }
