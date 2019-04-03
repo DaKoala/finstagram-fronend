@@ -21,5 +21,10 @@ export default new Router({
             name: 'add-post',
             component: () => import('./views/AddPost.vue'),
         },
+        {
+            path: '/user/:username',
+            name: 'user',
+            component: () => import('./views/User.vue'),
+        },
     ],
 });

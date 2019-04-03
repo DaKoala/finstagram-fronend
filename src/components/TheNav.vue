@@ -11,6 +11,7 @@
             prefix-icon="el-icon-search"
             v-model="searchQuery"
             :fetch-suggestions="handleSearch"
+            @select="handleSelect"
             clearable>
             <template slot-scope="{ item }">
                 <img class="autocomplete__avatar" :src="item.avatar" alt="avatar"/>
@@ -88,7 +89,6 @@ export default class TheNav extends Vue {
                         newItem.avatar = `${BASE_URL}/image/${item.avatar}`;
                         return newItem;
                     }).filter((item: UserItem) => item.username !== myName);
-                    console.log(result);
                     cb(result);
                 } else {
                     cb([]);
@@ -99,6 +99,16 @@ export default class TheNav extends Vue {
                 }
             }, 1000);
         }
+    }
+
+    handleSelect(this: TheNav, item: { username: string, avatar: string}) {
+        console.log(item);
+        this.$router.push({
+            name: 'user',
+            params: {
+                username: item.username,
+            },
+        });
     }
 }
 </script>
