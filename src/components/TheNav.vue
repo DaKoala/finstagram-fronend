@@ -45,7 +45,7 @@
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import { logout, searchFriend } from '@/service/api';
-import BASE_URL from '@/service/config';
+import resolveImagePath from '@/utils/resolve-image-path';
 
 @Component
 export default class TheNav extends Vue {
@@ -86,7 +86,7 @@ export default class TheNav extends Vue {
                     }
                     const result = data.users.map((item: UserItem) => {
                         const newItem = item;
-                        newItem.avatar = `${BASE_URL}/image/${item.avatar}`;
+                        newItem.avatar = resolveImagePath(newItem.avatar);
                         return newItem;
                     }).filter((item: UserItem) => item.username !== myName);
                     cb(result);

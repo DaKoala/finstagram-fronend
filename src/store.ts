@@ -1,7 +1,7 @@
 /* eslint no-param-reassign: 0 */
 import Vue from 'vue';
 import Vuex from 'vuex';
-import BASE_URL from './service/config';
+import resolveImagePath from './utils/resolve-image-path';
 
 Vue.use(Vuex);
 
@@ -19,7 +19,7 @@ export default new Vuex.Store({
     mutations: {
         updateInfo(state: State, payload: { username: string, avatar: string }) {
             state.username = payload.username;
-            state.avatar = `${BASE_URL}/image/${payload.avatar}`;
+            state.avatar = resolveImagePath(payload.avatar);
         },
     },
     actions: {

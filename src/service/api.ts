@@ -90,3 +90,12 @@ export function searchFriend(username: string): Promise<any> {
         },
     });
 }
+
+export function fetchUserInfo(username: string): Promise<any> {
+    return ajax({
+        url: '/fetchUserInfo',
+        data: {
+            username,
+        },
+    });
+}
