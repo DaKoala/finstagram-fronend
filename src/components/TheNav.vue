@@ -25,7 +25,10 @@
                 @click="toAddPost"></i>
             <i class="el-icon-bell" title="Follower Requests"></i>
             <el-dropdown>
-                <img class="nav__avatar" :src="$store.state.avatar" alt="Avatar">
+                <img class="nav__avatar"
+                     :src="$store.state.avatar"
+                     alt="Avatar"
+                     @click="toUserMyself"/>
                 <el-dropdown-menu slot="dropdown">
                     <el-dropdown-item disabled>
                         <span class="nav__username">
@@ -68,6 +71,15 @@ export default class TheNav extends Vue {
                 type: 'error',
             });
         }
+    }
+
+    toUserMyself(this: TheNav) {
+        this.$router.push({
+            name: 'user',
+            params: {
+                username: this.$store.state.username,
+            },
+        });
     }
 
     handleSearch(this: TheNav, queryString: string, cb: (results: []) => void) {

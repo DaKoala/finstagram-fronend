@@ -8,6 +8,7 @@
                     <div class="basic__line">
                         <span class="basic__username">{{ user.username }}</span>
                         <el-button
+                            v-if="!isMyself"
                             :type="followBtnStyle"
                             :disabled="followBtnDisabled">{{ followBtnText }}</el-button>
                     </div>
@@ -18,7 +19,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Component, Watch, Vue } from 'vue-property-decorator';
 import TheNav from '@/components/TheNav.vue';
 import { authorizeBeforeLoad, fetchUserInfo, getFollowState } from '@/service/api';
 import resolveImagePath from '@/utils/resolve-image-path';
@@ -71,7 +72,16 @@ export default class User extends Vue {
         return 'primary';
     }
 
-    async created(this: User) {
+    @Watch('$route.params.username')
+    onUsernameChanged(this: User) {
+        this.loadData();
+    }
+
+    created(this: User) {
+        this.loadData();
+    }
+
+    async loadData(this: User) {
         await authorizeBeforeLoad(this);
         const { data } = await fetchUserInfo(this.$route.params.username);
         if (data.status === 200 && data.user) {
