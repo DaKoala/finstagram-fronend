@@ -11,7 +11,12 @@
             prefix-icon="el-icon-search"
             v-model="searchQuery"
             :fetch-suggestions="handleSearch"
-            clearable></el-autocomplete>
+            clearable>
+            <template slot-scope="{ item }">
+                <img class="autocomplete__avatar" :src="item.avatar" alt="avatar"/>
+                <span class="autocomplete__text" >{{ item.username }}</span>
+            </template>
+        </el-autocomplete>
         <div class="nav__icon-group">
             <i
                 class="el-icon-circle-plus-outline icon--plus"
@@ -39,6 +44,7 @@
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import { logout, searchFriend } from '@/service/api';
+import BASE_URL from '@/service/config';
 
 @Component
 export default class TheNav extends Vue {
@@ -72,7 +78,18 @@ export default class TheNav extends Vue {
                 const res = await searchFriend(queryString);
                 const { data } = res;
                 if (data.status === 200) {
-                    cb(data.users);
+                    const myName = this.$store.state.username;
+                    interface UserItem {
+                        avatar: string,
+                        username: string,
+                    }
+                    const result = data.users.map((item: UserItem) => {
+                        const newItem = item;
+                        newItem.avatar = `${BASE_URL}/image/${item.avatar}`;
+                        return newItem;
+                    }).filter((item: UserItem) => item.username !== myName);
+                    console.log(result);
+                    cb(result);
                 } else {
                     cb([]);
                     this.$message({
@@ -149,5 +166,18 @@ export default class TheNav extends Vue {
         &:hover {
             color: $brand-color;
         }
+    }
+
+    .autocomplete__avatar {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        vertical-align: middle;
+    }
+
+    .autocomplete__text {
+        text-overflow: ellipsis;
+        margin-left: 5px;
+        font-weight: bold;
     }
 </style>
