@@ -7,7 +7,9 @@
                 <div class="basic__text">
                     <div class="basic__line">
                         <span class="basic__username">{{ user.username }}</span>
-                        <el-button>Follow</el-button>
+                        <el-button
+                            :type="followBtnStyle"
+                            :disabled="followBtnDisabled">{{ followBtnText }}</el-button>
                     </div>
                 </div>
             </div>
@@ -44,6 +46,30 @@ export default class User extends Vue {
         avatar: '',
         followState: FollowState.Accepted,
     };
+
+    get followBtnText() {
+        const state = this.user.followState;
+        if (state === FollowState.Unaccepted) {
+            return 'Request sent';
+        }
+        if (state === FollowState.Accepted) {
+            return 'Following';
+        }
+        return 'Follow';
+    }
+
+    get followBtnDisabled() {
+        const state = this.user.followState;
+        return state === FollowState.Accepted || state === FollowState.Unaccepted;
+    }
+
+    get followBtnStyle() {
+        const state = this.user.followState;
+        if (state === FollowState.Unaccepted) {
+            return '';
+        }
+        return 'primary';
+    }
 
     async created(this: User) {
         await authorizeBeforeLoad(this);
