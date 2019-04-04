@@ -110,7 +110,7 @@ export function addPost(fileName: string, caption: string, allFollowers: boolean
     });
 }
 
-interface SearchFriendUser {
+export interface SearchFriendUser {
     username: string,
     avatar: string,
 }
@@ -126,7 +126,7 @@ export function searchFriend(username: string): Promise<BaseResponse<SearchFrien
     });
 }
 
-interface FetchUserInfoData extends BaseData{
+interface FetchUserInfoData extends BaseData {
     user: {
         username: string,
         avatar: string,
@@ -141,7 +141,7 @@ export function fetchUserInfo(username: string): Promise<BaseResponse<FetchUserI
     });
 }
 
-interface GetFollowStateData extends BaseData{
+interface GetFollowStateData extends BaseData {
     requestState: number,
 }
 export function getFollowState(followee: string): Promise<BaseResponse<GetFollowStateData>> {

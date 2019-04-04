@@ -23,7 +23,9 @@
                 class="el-icon-circle-plus-outline icon--plus"
                 title="Post Photo"
                 @click="toAddPost"></i>
-            <i class="el-icon-bell" title="Follower Requests"></i>
+            <i class="el-icon-bell"
+               title="Follower Requests"
+               @click="handleRequestPopup"></i>
             <el-dropdown>
                 <img class="nav__avatar"
                      :src="$store.state.avatar"
@@ -42,22 +44,38 @@
                 </el-dropdown-menu>
             </el-dropdown>
         </div>
+        <TheFollowDialog :is-visible="dialogVisible" @close="handleRequestClose"></TheFollowDialog>
     </el-menu>
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
-import { logout, searchFriend } from '@/service/api';
+import { Component, Vue } from 'vue-property-decorator';
+import { logout, searchFriend, SearchFriendUser } from '@/service/api';
 import resolveImagePath from '@/utils/resolve-image-path';
+import TheFollowDialog from '@/components/TheFollowDialog.vue';
 
-@Component
+@Component({
+    components: {
+        TheFollowDialog,
+    },
+})
 export default class TheNav extends Vue {
     searchQuery = '';
+
+    dialogVisible = false;
 
     timeout: any = null;
 
     toAddPost(this: TheNav) {
         this.$router.push('/add-post');
+    }
+
+    handleRequestPopup(this: TheNav) {
+        this.dialogVisible = true;
+    }
+
+    handleRequestClose(this: TheNav) {
+        this.dialogVisible = false;
     }
 
     async handleLogOut(this: TheNav) {
@@ -79,7 +97,7 @@ export default class TheNav extends Vue {
         });
     }
 
-    handleSearch(this: TheNav, queryString: string, cb: (results: []) => void) {
+    handleSearch(this: TheNav, queryString: string, cb: (results: SearchFriendUser[]) => void) {
         clearTimeout(this.timeout);
         if (queryString === '') {
             cb([]);
