@@ -179,3 +179,14 @@ export function showRequest(): Promise<BaseResponse<ShowRequestData>> {
         url: '/showRequestFollowee',
     });
 }
+
+export function manageRequest(followerUsername: string, response: number):
+    Promise<BaseResponse<BaseData>> {
+    return ajax({
+        url: '/manageRequest',
+        data: {
+            response,
+            followerUsername,
+        },
+    });
+}
