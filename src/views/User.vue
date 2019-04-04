@@ -100,10 +100,7 @@ export default class User extends Vue {
         if (data.status === 200) {
             this.user.followState = followData.requestState;
         } else {
-            this.$message({
-                message: followData.msg,
-                type: 'error',
-            });
+            this.$error(followData);
         }
     }
 

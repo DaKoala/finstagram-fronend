@@ -66,10 +66,7 @@ export default class TheNav extends Vue {
         if (data.status === 200) {
             this.$router.push('/');
         } else {
-            this.$message({
-                message: data.msg,
-                type: 'error',
-            });
+            this.$error(data);
         }
     }
 
@@ -104,10 +101,7 @@ export default class TheNav extends Vue {
                     cb(result);
                 } else {
                     cb([]);
-                    this.$message({
-                        message: data.msg,
-                        type: 'error',
-                    });
+                    this.$error(data);
                 }
             }, 1000);
         }

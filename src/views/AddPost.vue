@@ -79,10 +79,7 @@ export default class AddPost extends Vue {
             this.imageUrl = URL.createObjectURL(file.raw);
             this.post.fileName = res.imageName;
         } else {
-            this.$message({
-                message: res.msg,
-                type: 'error',
-            });
+            this.$error(res);
         }
     }
 
@@ -101,10 +98,7 @@ export default class AddPost extends Vue {
                 this.$router.push('/dashboard');
             }, 3000);
         } else {
-            this.$message({
-                message: data.msg,
-                type: 'error',
-            });
+            this.$error(data);
         }
     }
 

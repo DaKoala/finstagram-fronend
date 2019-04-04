@@ -77,8 +77,6 @@ export default class TheLogin extends Vue {
 
     isLogIn = true;
 
-    $message: any;
-
     get formRules(): void | object {
         if (this.isLogIn) {
             return undefined;
@@ -206,10 +204,7 @@ export default class TheLogin extends Vue {
         if (data.status === 200) {
             this.$router.push('/dashboard');
         } else {
-            this.$message({
-                message: data.msg,
-                type: 'error',
-            });
+            this.$error(data);
         }
     }
 
@@ -222,10 +217,7 @@ export default class TheLogin extends Vue {
         });
         const { data } = res;
         if (data.status !== 200) {
-            this.$message({
-                message: data.msg,
-                type: 'error',
-            });
+            this.$error(data);
             throw new Error(data.msg);
         }
     }
