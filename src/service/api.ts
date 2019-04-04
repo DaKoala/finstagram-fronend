@@ -1,7 +1,27 @@
 import Vue from 'vue';
 import ajax from './ajax';
 
-export function authorize(): Promise<any> {
+interface BaseData {
+    status: number,
+    msg: string,
+}
+
+interface BaseResponse<Data> {
+    config: any;
+    data: Data;
+    headers: {
+        'content-type': string,
+    },
+    request: XMLHttpRequest,
+    status: number,
+    statusText: string,
+}
+
+interface AuthorizeData extends BaseData {
+    username: string,
+    avatar: string,
+}
+export function authorize(): Promise<BaseResponse<AuthorizeData>> {
     return ajax({
         url: '/authorize',
     });
@@ -10,6 +30,7 @@ export function authorize(): Promise<any> {
 export async function authorizeBeforeLoad(app: Vue) {
     try {
         const res = await authorize();
+        console.log(res);
         const { data } = res;
         if (data.status === 200) {
             app.$store.commit('updateInfo', {
@@ -24,7 +45,10 @@ export async function authorizeBeforeLoad(app: Vue) {
     }
 }
 
-export function login(username: string, password: string): Promise<any> {
+interface LoginData extends BaseData {
+    username: string,
+}
+export function login(username: string, password: string): Promise<BaseResponse<LoginData>> {
     return ajax({
         method: 'post',
         url: '/loginAuth',
@@ -35,13 +59,13 @@ export function login(username: string, password: string): Promise<any> {
     });
 }
 
-export function logout(): Promise<any> {
+export function logout(): Promise<BaseResponse<BaseData>> {
     return ajax({
         url: '/logout',
     });
 }
 
-export function checkUsername(username: string): Promise<any> {
+export function checkUsername(username: string): Promise<BaseResponse<BaseData>> {
     return ajax({
         method: 'post',
         url: '/usernameCheck',
@@ -51,13 +75,16 @@ export function checkUsername(username: string): Promise<any> {
     });
 }
 
-interface registerParams {
+interface RegisterParams {
     username: string;
     password: string;
     firstName: string;
     lastName: string;
 }
-export function register(params: registerParams): Promise<any> {
+interface RegisterData extends BaseData {
+    username: string,
+}
+export function register(params: RegisterParams): Promise<BaseResponse<RegisterData>> {
     return ajax({
         method: 'post',
         url: '/registerAuth',
@@ -70,7 +97,8 @@ export function register(params: registerParams): Promise<any> {
     });
 }
 
-export function addPost(fileName: string, caption: string, allFollowers: boolean): Promise<any> {
+export function addPost(fileName: string, caption: string, allFollowers: boolean):
+    Promise<BaseResponse<BaseData>> {
     return ajax({
         method: 'post',
         url: '/uploadPost',
@@ -82,7 +110,14 @@ export function addPost(fileName: string, caption: string, allFollowers: boolean
     });
 }
 
-export function searchFriend(username: string): Promise<any> {
+interface SearchFriendUser {
+    username: string,
+    avatar: string,
+}
+interface SearchFriendData extends BaseData {
+    users: SearchFriendUser[];
+}
+export function searchFriend(username: string): Promise<BaseResponse<SearchFriendData>> {
     return ajax({
         url: '/searchFriend',
         data: {
@@ -91,7 +126,13 @@ export function searchFriend(username: string): Promise<any> {
     });
 }
 
-export function fetchUserInfo(username: string): Promise<any> {
+interface FetchUserInfoData extends BaseData{
+    user: {
+        username: string,
+        avatar: string,
+    }
+}
+export function fetchUserInfo(username: string): Promise<BaseResponse<FetchUserInfoData>> {
     return ajax({
         url: '/fetchUserInfo',
         data: {
@@ -100,7 +141,10 @@ export function fetchUserInfo(username: string): Promise<any> {
     });
 }
 
-export function getFollowState(followee: string): Promise<any> {
+interface GetFollowStateData extends BaseData{
+    requestState: number,
+}
+export function getFollowState(followee: string): Promise<BaseResponse<GetFollowStateData>> {
     return ajax({
         url: '/getFollowState',
         data: {
@@ -109,7 +153,7 @@ export function getFollowState(followee: string): Promise<any> {
     });
 }
 
-export function followRequest(followee: string): Promise<any> {
+export function followRequest(followee: string): Promise<BaseResponse<BaseData>> {
     return ajax({
         url: '/followRequest',
         data: {
