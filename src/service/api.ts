@@ -108,3 +108,12 @@ export function getFollowState(followee: string): Promise<any> {
         },
     });
 }
+
+export function followRequest(followee: string): Promise<any> {
+    return ajax({
+        url: '/followRequest',
+        data: {
+            followee,
+        },
+    });
+}

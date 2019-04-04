@@ -10,7 +10,9 @@
                         <el-button
                             v-if="!isMyself"
                             :type="followBtnStyle"
-                            :disabled="followBtnDisabled">{{ followBtnText }}</el-button>
+                            :disabled="followBtnDisabled"
+                            :loading="buttonLoading"
+                            @click="handleFollow">{{ followBtnText }}</el-button>
                     </div>
                 </div>
             </div>
@@ -21,7 +23,12 @@
 <script lang="ts">
 import { Component, Watch, Vue } from 'vue-property-decorator';
 import TheNav from '@/components/TheNav.vue';
-import { authorizeBeforeLoad, fetchUserInfo, getFollowState } from '@/service/api';
+import {
+    authorizeBeforeLoad,
+    fetchUserInfo,
+    getFollowState,
+    followRequest,
+} from '@/service/api';
 import resolveImagePath from '@/utils/resolve-image-path';
 
 enum FollowState {
@@ -37,6 +44,8 @@ enum FollowState {
 })
 export default class User extends Vue {
     isMyself = false;
+
+    buttonLoading = false;
 
     user: {
         followState: FollowState,
@@ -67,7 +76,7 @@ export default class User extends Vue {
     get followBtnStyle() {
         const state = this.user.followState;
         if (state === FollowState.Unaccepted) {
-            return '';
+            return 'info';
         }
         return 'primary';
     }
@@ -118,6 +127,17 @@ export default class User extends Vue {
                 }
             }
         });
+    }
+
+    async handleFollow(this: User) {
+        this.buttonLoading = true;
+        const { data } = await followRequest(this.$route.params.username);
+        this.buttonLoading = false;
+        if (data.status === 200) {
+            this.user.followState = FollowState.Unaccepted;
+        } else {
+            this.$error(data);
+        }
     }
 }
 </script>
