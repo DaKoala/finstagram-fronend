@@ -1,7 +1,7 @@
 /* eslint no-param-reassign: 0 */
 import Vue from 'vue';
 import Vuex from 'vuex';
-import resolveImagePath from './utils/resolve-image-path';
+import { resolveImagePath } from './utils/resolve-image-path';
 
 Vue.use(Vuex);
 

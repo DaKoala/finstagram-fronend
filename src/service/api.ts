@@ -1,6 +1,11 @@
 import Vue from 'vue';
 import ajax from './ajax';
 
+interface User {
+    username: string,
+    avatar: string,
+}
+
 interface BaseData {
     status: number,
     msg: string,
@@ -30,7 +35,6 @@ export function authorize(): Promise<BaseResponse<AuthorizeData>> {
 export async function authorizeBeforeLoad(app: Vue) {
     try {
         const res = await authorize();
-        console.log(res);
         const { data } = res;
         if (data.status === 200) {
             app.$store.commit('updateInfo', {
@@ -159,5 +163,19 @@ export function followRequest(followee: string): Promise<BaseResponse<BaseData>>
         data: {
             followee,
         },
+    });
+}
+
+export interface Follower {
+    avatar: string;
+    followerUsername: string;
+}
+
+interface ShowRequestData extends BaseData {
+    users: Follower[];
+}
+export function showRequest(): Promise<BaseResponse<ShowRequestData>> {
+    return ajax({
+        url: '/showRequestFollowee',
     });
 }

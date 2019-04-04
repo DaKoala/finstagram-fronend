@@ -51,7 +51,7 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import { logout, searchFriend, SearchFriendUser } from '@/service/api';
-import resolveImagePath from '@/utils/resolve-image-path';
+import { resolveImagePath } from '@/utils/resolve-image-path';
 import TheFollowDialog from '@/components/TheFollowDialog.vue';
 
 @Component({

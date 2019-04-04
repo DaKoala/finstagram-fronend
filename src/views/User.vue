@@ -29,7 +29,7 @@ import {
     getFollowState,
     followRequest,
 } from '@/service/api';
-import resolveImagePath from '@/utils/resolve-image-path';
+import { resolveImagePath } from '@/utils/resolve-image-path';
 
 enum FollowState {
     Unaccepted,
