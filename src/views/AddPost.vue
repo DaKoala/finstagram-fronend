@@ -26,7 +26,12 @@
                         v-model="post.allFollowers"
                         active-text="Visible to all followers"></el-switch>
                 </el-form-item>
-                <el-form-item class="post__button-container">
+                <el-form-item class="center-container" v-if="!post.allFollowers">
+                    <el-transfer
+                        v-model="post.sharedGroups"
+                        :data="joinedGroups"></el-transfer>
+                </el-form-item>
+                <el-form-item class="center-container">
                     <el-button
                         type="primary"
                         :loading="buttonLoading"
@@ -44,7 +49,7 @@
 
 <script lang="ts">
 import BASE_URL from '../service/config';
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Component, Watch, Vue } from 'vue-property-decorator';
 import TheNav from '@/components/TheNav.vue';
 import { authorizeBeforeLoad, addPost } from '@/service/api';
 
@@ -60,15 +65,21 @@ export default class AddPost extends Vue {
 
     postButton = 'Post';
 
+    joinedGroups = [];
+
     post = {
         fileName: '',
         caption: '',
-        allFollowers: false,
+        sharedGroups: [],
+        allFollowers: true,
     };
 
     buttonLoading = false;
 
     buttonDisabled = false;
+
+    @Watch('post.allFollowers')
+
 
     async created(this: AddPost) {
         authorizeBeforeLoad(this);
@@ -118,7 +129,7 @@ export default class AddPost extends Vue {
         margin: 50px auto 0 auto;
     }
 
-    .post__button-container {
+    .center-container {
         @include center-flex;
     }
 
