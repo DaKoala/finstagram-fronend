@@ -29,7 +29,10 @@
                 <el-form-item class="center-container" v-if="!post.allFollowers">
                     <el-transfer
                         v-model="post.sharedGroups"
-                        :data="joinedGroups"></el-transfer>
+                        v-loading="transferLoading"
+                        :titles="['Joined groups', 'Photo shared in:']"
+                        :button-texts="['Not share', 'Share']"
+                        :data="joinedGroupsInTransfer"></el-transfer>
                 </el-form-item>
                 <el-form-item class="center-container">
                     <el-button
@@ -51,7 +54,18 @@
 import BASE_URL from '../service/config';
 import { Component, Watch, Vue } from 'vue-property-decorator';
 import TheNav from '@/components/TheNav.vue';
-import { authorizeBeforeLoad, addPost } from '@/service/api';
+import {
+    Group,
+    authorizeBeforeLoad,
+    addPost,
+    getJoinedGroups,
+} from '@/service/api';
+
+interface DisplayedGroup {
+    key: number,
+    label: string,
+    disabled?: boolean,
+}
 
 @Component({
     components: {
@@ -65,7 +79,7 @@ export default class AddPost extends Vue {
 
     postButton = 'Post';
 
-    joinedGroups = [];
+    joinedGroups: Group[] = [];
 
     post = {
         fileName: '',
@@ -74,12 +88,33 @@ export default class AddPost extends Vue {
         allFollowers: true,
     };
 
+    transferLoading = false;
+
     buttonLoading = false;
 
     buttonDisabled = false;
 
-    @Watch('post.allFollowers')
+    get joinedGroupsInTransfer(): DisplayedGroup[] {
+        return this.joinedGroups.map((item, index) => ({
+            key: index,
+            label: `${item.groupName} - ${item.groupOwner}`,
+        }));
+    }
 
+    @Watch('post.allFollowers')
+    async onAllFollowersChange(this: AddPost, val: boolean) {
+        if (!val) {
+            this.transferLoading = true;
+            const { data } = await getJoinedGroups();
+            this.transferLoading = false;
+            if (data.status === 200) {
+                this.joinedGroups = data.groups;
+            } else {
+                this.$error(data);
+                this.joinedGroups = [];
+            }
+        }
+    }
 
     async created(this: AddPost) {
         authorizeBeforeLoad(this);

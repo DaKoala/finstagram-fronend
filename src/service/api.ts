@@ -6,6 +6,11 @@ interface User {
     avatar: string,
 }
 
+export interface Group {
+    groupName: string,
+    groupOwner: string,
+}
+
 interface BaseData {
     status: number,
     msg: string,
@@ -188,5 +193,14 @@ export function manageRequest(followerUsername: string, response: number):
             response,
             followerUsername,
         },
+    });
+}
+
+interface JoinedGroupsData extends BaseData {
+    groups: Group[];
+}
+export function getJoinedGroups(): Promise<BaseResponse<JoinedGroupsData>> {
+    return ajax({
+        url: '/getJoinedGroups',
     });
 }
