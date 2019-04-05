@@ -28,7 +28,7 @@
                 </el-form-item>
                 <el-form-item class="center-container" v-if="!post.allFollowers">
                     <el-transfer
-                        v-model="post.sharedGroups"
+                        v-model="post.sharedGroupsIndex"
                         v-loading="transferLoading"
                         :titles="['Joined groups', 'Photo shared in:']"
                         :button-texts="['Not share', 'Share']"
@@ -84,7 +84,7 @@ export default class AddPost extends Vue {
     post = {
         fileName: '',
         caption: '',
-        sharedGroups: [],
+        sharedGroupsIndex: [],
         allFollowers: true,
     };
 
@@ -131,7 +131,16 @@ export default class AddPost extends Vue {
 
     async submitPost(this: AddPost) {
         this.buttonLoading = true;
-        const res = await addPost(this.post.fileName, this.post.caption, this.post.allFollowers);
+        const sharedGroups: Group[] = [];
+        this.post.sharedGroupsIndex.forEach((item) => {
+            sharedGroups.push(this.joinedGroups[item]);
+        });
+        const res = await addPost({
+            fileName: this.post.fileName,
+            caption: this.post.caption,
+            allFollowers: this.post.allFollowers,
+            sharedGroups,
+        });
         this.buttonLoading = false;
         const { data } = res;
         if (data.status === 200) {

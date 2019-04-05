@@ -106,15 +106,23 @@ export function register(params: RegisterParams): Promise<BaseResponse<RegisterD
     });
 }
 
-export function addPost(fileName: string, caption: string, allFollowers: boolean):
+interface Post {
+    fileName: string;
+    caption: string;
+    allFollowers: boolean;
+    sharedGroups: { groupName: string, groupOwner: string, }[];
+}
+
+export function addPost(params: Post):
     Promise<BaseResponse<BaseData>> {
     return ajax({
         method: 'post',
         url: '/uploadPost',
         data: {
-            fileName,
-            caption,
-            allFollowers,
+            fileName: params.fileName,
+            caption: params.caption,
+            allFollowers: params.allFollowers,
+            sharedGroups: params.sharedGroups,
         },
     });
 }
