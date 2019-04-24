@@ -39,6 +39,11 @@
                         </span>
                     </el-dropdown-item>
                     <el-dropdown-item
+                        @click.native="$router.push('/friend-groups')"
+                        divided>
+                        Close friend groups
+                    </el-dropdown-item>
+                    <el-dropdown-item
                         @click.native="handleLogOut"
                         divided>Log out</el-dropdown-item>
                 </el-dropdown-menu>

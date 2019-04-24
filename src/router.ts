@@ -27,6 +27,11 @@ export default new Router({
             component: () => import('./views/User.vue'),
         },
         {
+            path: '/friend-groups',
+            name: 'friend-groups',
+            component: () => import('./views/FriendGroups.vue'),
+        },
+        {
             path: '/*',
             redirect: '/',
         },

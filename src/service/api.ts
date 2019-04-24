@@ -207,8 +207,11 @@ export function manageRequest(followerUsername: string, response: number):
 interface JoinedGroupsData extends BaseData {
     groups: Group[];
 }
-export function getJoinedGroups(): Promise<BaseResponse<JoinedGroupsData>> {
+export function getJoinedGroups(hasGroupMember = false): Promise<BaseResponse<JoinedGroupsData>> {
     return ajax({
         url: '/getJoinedGroups',
+        data: {
+            hasGroupMember,
+        },
     });
 }
