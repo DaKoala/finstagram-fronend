@@ -46,7 +46,11 @@
             </el-table>
         </main>
         <el-dialog :title="addMemberHeader" :visible.sync="addMemberFormVisible">
-            <el-form :model="newMembersForm" :key="addMemberFormVisible">
+            <el-form
+                :model="newMembersForm"
+                label-width="160px"
+                :key="addMemberFormVisible"
+                ref="memberForm">
                 <el-form-item
                     v-for="(member, index) in newMembersForm.newMembers"
                     :label="'member' + (index + 1) + '\'s username'"
@@ -162,6 +166,18 @@ export default class FriendGroups extends Vue {
 
     removeMember(index: number) {
         this.newMembersForm.newMembers.splice(index, 1);
+    }
+
+    submitMemberForm() {
+        // @ts-ignore
+        this.$refs.memberForm.validate((valid) => {
+            if (valid) {
+                alert('submit');
+            } else {
+                return false;
+            }
+            return undefined;
+        });
     }
 }
 </script>
