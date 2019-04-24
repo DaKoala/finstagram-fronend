@@ -30,6 +30,16 @@
                     label="Owner"
                     align="center"
                 ></el-table-column>
+                <el-table-column label="Operations" align="center">
+                    <template slot-scope="scope">
+                        <el-button
+                            size="mini"
+                            type="primary"
+                            @click="addGroupMember(scope.row)"
+                            v-if="scope.row.groupOwner === $store.state.username"
+                        >Add member</el-button>
+                    </template>
+                </el-table-column>
             </el-table>
         </main>
     </div>
@@ -48,10 +58,19 @@ export default class FriendGroups extends Vue {
 
     joinedGroups: Group[] = [];
 
+    groupNameToAdd = '';
+
+    groupOwnerToadd = '';
+
     async created() {
         const { data } = await getJoinedGroups(true);
         this.pageLoading = false;
         this.joinedGroups = data.groups;
+    }
+
+    addGroupMember(group: Group) {
+        this.groupNameToAdd = group.groupName;
+        this.groupOwnerToadd = group.groupOwner;
     }
 }
 </script>
