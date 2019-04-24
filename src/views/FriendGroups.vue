@@ -45,6 +45,25 @@
                 </el-table-column>
             </el-table>
         </main>
+        <el-dialog :title="addMemberHeader" :visible.sync="addMemberFormVisible">
+            <el-form :model="newMembersForm" :key="addMemberFormVisible">
+                <el-form-item
+                    v-for="(member, index) in newMembersForm.newMembers"
+                    :label="'member' + (index + 1) + '\'s username'"
+                    :key="index"
+                    :prop="'newMembers.' + index + '.username'"
+                    :rules="{required: true, message: 'Username cannot be empty!', trigger: 'blur'}"
+                >
+                    <el-input v-model="member.username" class="member-input"></el-input>
+                    <el-button @click.prevent="removeMember(index)">Remove</el-button>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="addMemberInput">Add new</el-button>
+                <el-button @click="cancelAddingMember">Cancel</el-button>
+                <el-button type="primary">Finish</el-button>
+            </div>
+        </el-dialog>
     </div>
 </template>
 
@@ -70,6 +89,18 @@ export default class FriendGroups extends Vue {
     groupNameToAdd = '';
 
     groupOwnerToAdd = '';
+
+    newMembersForm = {
+        newMembers: [{
+            username: '',
+        }],
+    };
+
+    addMemberFormVisible = false;
+
+    get addMemberHeader() {
+        return `Add member to group ${this.groupNameToAdd} owned by ${this.groupOwnerToAdd}`;
+    }
 
     async created() {
         await authorizeBeforeLoad(this);
@@ -111,6 +142,26 @@ export default class FriendGroups extends Vue {
     addGroupMember(group: Group) {
         this.groupNameToAdd = group.groupName;
         this.groupOwnerToAdd = group.groupOwner;
+        this.addMemberFormVisible = true;
+    }
+
+    addMemberInput() {
+        this.newMembersForm.newMembers.push({
+            username: '',
+        });
+    }
+
+    cancelAddingMember() {
+        this.addMemberFormVisible = false;
+        this.newMembersForm = {
+            newMembers: [{
+                username: '',
+            }],
+        };
+    }
+
+    removeMember(index: number) {
+        this.newMembersForm.newMembers.splice(index, 1);
     }
 }
 </script>
@@ -142,5 +193,9 @@ export default class FriendGroups extends Vue {
         margin-right: 0;
         margin-bottom: 0;
         width: 50%;
+    }
+    .member-input {
+        width: 50%;
+        margin-right: 10px;
     }
 </style>
