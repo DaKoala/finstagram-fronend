@@ -215,3 +215,15 @@ export function getJoinedGroups(hasGroupMember = false): Promise<BaseResponse<Jo
         },
     });
 }
+
+interface CreateGroupData extends BaseData {
+    groupName: string;
+}
+export function createGroup(groupName: string): Promise<BaseResponse<CreateGroupData>> {
+    return ajax({
+        url: '/createGroup',
+        data: {
+            groupName,
+        },
+    });
+}

@@ -9,6 +9,12 @@ Vue.config.productionTip = false;
 declare module 'vue/types/vue' {
     interface Vue {
         $message: (params: { message: string, type?: string }) => void;
+        $prompt: (inputHint: string, title: string, custom: {
+            confirmButtonText: string,
+            cancelButtonText: string,
+            inputPattern?: string,
+            inputErrorMessage?: string,
+        }) => Promise<{ value: string }>;
         $error: any;
     }
 }

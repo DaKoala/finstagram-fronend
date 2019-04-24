@@ -2,7 +2,10 @@
     <div>
         <TheNav/>
         <main class="groups" v-loading.fullscreen.lock="pageLoading">
-            <el-button type="primary" icon="el-icon-plus">Create new group</el-button>
+            <el-button type="primary"
+                       icon="el-icon-plus"
+                       @click="createNewGroup"
+            >Create new group</el-button>
             <h2>Groups I belong to</h2>
             <el-table
                 :data="joinedGroups"
@@ -48,7 +51,13 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import TheNav from '@/components/TheNav.vue';
-import { Group, getJoinedGroups } from '@/service/api';
+import {
+    Group, authorizeBeforeLoad, getJoinedGroups, createGroup,
+} from '@/service/api';
+
+interface GroupWithMember extends Group {
+    members: string[];
+}
 
 @Component({
     components: { TheNav },
@@ -56,21 +65,52 @@ import { Group, getJoinedGroups } from '@/service/api';
 export default class FriendGroups extends Vue {
     pageLoading = true;
 
-    joinedGroups: Group[] = [];
+    joinedGroups: GroupWithMember[] = [];
 
     groupNameToAdd = '';
 
-    groupOwnerToadd = '';
+    groupOwnerToAdd = '';
 
     async created() {
+        await authorizeBeforeLoad(this);
         const { data } = await getJoinedGroups(true);
         this.pageLoading = false;
-        this.joinedGroups = data.groups;
+        this.joinedGroups = data.groups as GroupWithMember[];
+    }
+
+    createNewGroup() {
+        this.$prompt('Please enter the name of the new group', 'New Group', {
+            confirmButtonText: 'Confirm',
+            cancelButtonText: 'Cancel',
+        })
+            .then(({ value }) => createGroup(value))
+            .then(({ data }) => {
+                if (data.status === 200) {
+                    this.insertMyNewGroup(data.groupName);
+                    this.$message({
+                        message: 'A new group has been created.',
+                        type: 'success',
+                    });
+                } else {
+                    this.$error(data);
+                }
+            })
+            .catch(() => {});
+    }
+
+    insertMyNewGroup(groupName: string) {
+        const myUsername = this.$store.state.username;
+        const newGroup: GroupWithMember = {
+            groupOwner: myUsername,
+            members: [myUsername],
+            groupName,
+        };
+        this.joinedGroups.unshift(newGroup);
     }
 
     addGroupMember(group: Group) {
         this.groupNameToAdd = group.groupName;
-        this.groupOwnerToadd = group.groupOwner;
+        this.groupOwnerToAdd = group.groupOwner;
     }
 }
 </script>
