@@ -227,3 +227,20 @@ export function createGroup(groupName: string): Promise<BaseResponse<CreateGroup
         },
     });
 }
+
+interface AddMemberData extends BaseData {
+    newMembers: string[];
+}
+export function addMember(
+    groupName: string,
+    friends: string[],
+): Promise<BaseResponse<AddMemberData>> {
+    return ajax({
+        method: 'post',
+        url: '/addFriend',
+        data: {
+            groupName,
+            friends,
+        },
+    });
+}

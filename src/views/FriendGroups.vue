@@ -45,7 +45,10 @@
                 </el-table-column>
             </el-table>
         </main>
-        <el-dialog :title="addMemberHeader" :visible.sync="addMemberFormVisible">
+        <el-dialog
+            v-loading="formLoading"
+            :title="addMemberHeader"
+            :visible.sync="addMemberFormVisible">
             <el-form
                 :model="newMembersForm"
                 label-width="160px"
@@ -65,7 +68,7 @@
             <div slot="footer" class="dialog-footer">
                 <el-button @click="addMemberInput">Add new</el-button>
                 <el-button @click="cancelAddingMember">Cancel</el-button>
-                <el-button type="primary">Finish</el-button>
+                <el-button type="primary" @click="submitMemberForm">Finish</el-button>
             </div>
         </el-dialog>
     </div>
@@ -75,7 +78,7 @@
 import { Component, Vue } from 'vue-property-decorator';
 import TheNav from '@/components/TheNav.vue';
 import {
-    Group, authorizeBeforeLoad, getJoinedGroups, createGroup,
+    Group, authorizeBeforeLoad, getJoinedGroups, createGroup, addMember,
 } from '@/service/api';
 
 interface GroupWithMember extends Group {
@@ -87,6 +90,8 @@ interface GroupWithMember extends Group {
 })
 export default class FriendGroups extends Vue {
     pageLoading = true;
+
+    formLoading = false;
 
     joinedGroups: GroupWithMember[] = [];
 
@@ -170,13 +175,33 @@ export default class FriendGroups extends Vue {
 
     submitMemberForm() {
         // @ts-ignore
-        this.$refs.memberForm.validate((valid) => {
+        this.$refs.memberForm.validate(async (valid) => {
             if (valid) {
-                alert('submit');
-            } else {
-                return false;
+                const members = this.newMembersForm.newMembers.map(member => member.username);
+                this.formLoading = true;
+                const { data } = await addMember(this.groupNameToAdd, members);
+                this.formLoading = false;
+                if (data.status === 200) {
+                    let modifiedGroup: GroupWithMember;
+                    for (let i = 0; i < this.joinedGroups.length; i += 1) {
+                        const { groupName, groupOwner } = this.joinedGroups[i];
+                        if (groupName === this.groupNameToAdd
+                            && groupOwner === this.groupOwnerToAdd) {
+                            modifiedGroup = this.joinedGroups[i];
+                            break;
+                        }
+                    }
+                    // @ts-ignore
+                    modifiedGroup.members.push(...data.newMembers);
+                    this.addMemberFormVisible = false;
+                    this.$message({
+                        message: 'Your friends have been added to the group.',
+                        type: 'success',
+                    });
+                } else {
+                    this.$error(data);
+                }
             }
-            return undefined;
         });
     }
 }
