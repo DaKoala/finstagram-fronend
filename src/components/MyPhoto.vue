@@ -4,6 +4,7 @@
             <div class="heading__line heading__line--one">
                 <span class="heading__username">{{ photo.photoOwner }}</span>
                 <span class="heading__support">{{ dateFormat }}</span>
+                <span class="heading__support">PhotoID: {{ photo.photoID }}</span>
             </div>
             <div class="heading__line heading__line--two">
                 <span class="heading__caption">{{ photo.caption }}</span>
@@ -63,7 +64,7 @@ export default class MyPhoto extends Vue {
         margin: 0;
     }
 
-    .heading__line--two {
+    .heading__line--other {
         margin-top: 5px;
     }
 
