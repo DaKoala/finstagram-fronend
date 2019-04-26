@@ -7,7 +7,7 @@
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import TheNav from '@/components/TheNav.vue';
-import { authorizeBeforeLoad } from '@/service/api';
+import { Photo, authorizeBeforeLoad, showPhoto } from '@/service/api';
 
 @Component({
     components: {
@@ -15,8 +15,16 @@ import { authorizeBeforeLoad } from '@/service/api';
     },
 })
 export default class Dashboard extends Vue {
+    photos: Photo[] = [];
+
     async created(this: Dashboard) {
-        authorizeBeforeLoad(this);
+        await authorizeBeforeLoad(this);
+        const { data } = await showPhoto();
+        if (data.status === 200) {
+            this.photos = data.photos;
+        } else {
+            this.$error(data);
+        }
     }
 }
 </script>

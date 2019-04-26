@@ -244,3 +244,19 @@ export function addMember(
         },
     });
 }
+
+export interface Photo {
+    photoID: number;
+    photoOwner: string;
+    timestamp: number;
+    filePath: string;
+    caption: string;
+}
+interface ShowPhotoData extends BaseData {
+    photos: Photo[];
+}
+export function showPhoto(): Promise<BaseResponse<ShowPhotoData>> {
+    return ajax({
+        url: '/showPhoto',
+    });
+}
