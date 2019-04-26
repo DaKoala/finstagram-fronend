@@ -11,6 +11,29 @@
             </div>
         </div>
         <img class="photo__image" alt="a photo" :src="imageUrl" />
+        <div class="extension">
+            <div class="extension__buttons">
+                <font-awesome-icon :icon="['far', 'heart']"></font-awesome-icon>
+                <font-awesome-icon
+                    :icon="['fas', 'tag']"
+                    :class="{active: option === 1}"
+                    @click="select(1)"
+                ></font-awesome-icon>
+                <font-awesome-icon :icon="['fas', 'comment']"></font-awesome-icon>
+            </div>
+            <div class="extension__content">
+                <template v-if="option === 1">
+                    <el-form inline>
+                        <el-form-item label="Who's in the photo?">
+                            <el-input v-model="usernameToTag"></el-input>
+                        </el-form-item>
+                        <el-form-item>
+                            <el-button type="primary">Tag</el-button>
+                        </el-form-item>
+                    </el-form>
+                </template>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -18,6 +41,12 @@
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import { resolveImagePath } from '@/utils/resolve-image-path';
 import timeAgo from '@/utils/time-format';
+
+enum UserOption {
+    None,
+    Tag,
+    Comment,
+}
 
 @Component
 export default class MyPhoto extends Vue {
@@ -29,6 +58,10 @@ export default class MyPhoto extends Vue {
         photoID: number;
     };
 
+    option = UserOption.None;
+
+    usernameToTag = '';
+
     get imageUrl() {
         return resolveImagePath(this.photo.filePath);
     }
@@ -36,11 +69,23 @@ export default class MyPhoto extends Vue {
     get dateFormat() {
         return timeAgo(this.photo.timestamp);
     }
+
+    select(option: UserOption) {
+        if (this.option === option) {
+            this.option = UserOption.None;
+        } else {
+            this.option = option;
+        }
+    }
 }
 </script>
 
 <style lang="scss" scoped>
     @import "../assets/scss/main";
+
+    .active {
+        color: $brand-color;
+    }
 
     .photo {
         font-size: 0;
@@ -82,5 +127,23 @@ export default class MyPhoto extends Vue {
 
     .heading__caption {
         font-size: 14px;
+    }
+
+    .extension {
+        font-size: 24px;
+        padding: 10px 20px;
+    }
+
+    .extension__buttons {
+        color: $regular-text-color;
+    }
+
+    .extension__buttons svg {
+        margin-right: 15px;
+        cursor: pointer;
+    }
+
+    .extension__content {
+        margin-top: 10px;
     }
 </style>
