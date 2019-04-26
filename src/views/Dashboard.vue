@@ -2,7 +2,9 @@
     <div>
         <TheNav/>
         <main class="photo-container">
-            <MyPhoto></MyPhoto>
+            <MyPhoto v-for="photo in photos"
+                     :photo="photo"
+                     :key="photo.photoID"></MyPhoto>
         </main>
     </div>
 </template>
