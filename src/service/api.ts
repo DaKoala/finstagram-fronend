@@ -248,7 +248,7 @@ export function addMember(
 export interface Photo {
     photoID: number;
     photoOwner: string;
-    timestamp: number;
+    timestamp: string;
     filePath: string;
     caption: string;
 }
