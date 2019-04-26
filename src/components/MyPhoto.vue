@@ -28,7 +28,7 @@
                             <el-input v-model="usernameToTag"></el-input>
                         </el-form-item>
                         <el-form-item>
-                            <el-button type="primary">Tag</el-button>
+                            <el-button type="primary" @click="submitTag">Tag</el-button>
                         </el-form-item>
                     </el-form>
                 </template>
@@ -41,6 +41,7 @@
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import { resolveImagePath } from '@/utils/resolve-image-path';
 import timeAgo from '@/utils/time-format';
+import { tagPhoto } from '@/service/api';
 
 enum UserOption {
     None,
@@ -75,6 +76,26 @@ export default class MyPhoto extends Vue {
             this.option = UserOption.None;
         } else {
             this.option = option;
+        }
+    }
+
+    async submitTag() {
+        if (this.usernameToTag === '') {
+            this.$message({
+                message: 'Target username cannot be empty!',
+                type: 'error',
+            });
+            return;
+        }
+        const { data } = await tagPhoto(this.photo.photoID, this.usernameToTag);
+        if (data.status === 200) {
+            this.$message({
+                message: data.msg,
+                type: 'success',
+            });
+            this.usernameToTag = '';
+        } else {
+            this.$error(data);
         }
     }
 }

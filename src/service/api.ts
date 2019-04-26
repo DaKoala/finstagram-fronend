@@ -260,3 +260,13 @@ export function showPhoto(): Promise<BaseResponse<ShowPhotoData>> {
         url: '/showPhoto',
     });
 }
+
+export function tagPhoto(photoID: number, targetName: string): Promise<BaseResponse<BaseData>> {
+    return ajax({
+        url: '/tagPhoto',
+        data: {
+            photoID,
+            targetName,
+        },
+    });
+}
