@@ -13,7 +13,14 @@
         <img class="photo__image" alt="a photo" :src="imageUrl" />
         <div class="extension">
             <div class="extension__buttons">
-                <font-awesome-icon :icon="['far', 'heart']"></font-awesome-icon>
+                <font-awesome-icon
+                    v-if="liked"
+                    class="like"
+                    :icon="['fas', 'heart']"></font-awesome-icon>
+                <font-awesome-icon
+                    v-else
+                    @click="handleLikePhoto"
+                    :icon="['far', 'heart']"></font-awesome-icon>
                 <font-awesome-icon
                     :icon="['fas', 'tag']"
                     :class="{active: option === 1}"
@@ -45,7 +52,9 @@
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import { resolveImagePath } from '@/utils/resolve-image-path';
-import { TaggedPerson, tagPhoto, photoTag } from '@/service/api';
+import {
+    TaggedPerson, tagPhoto, photoTag, isLiked, likePhoto,
+} from '@/service/api';
 import timeAgo from '@/utils/time-format';
 
 enum UserOption {
@@ -68,6 +77,8 @@ export default class MyPhoto extends Vue {
 
     usernameToTag = '';
 
+    liked = false;
+
     hasPeople = false;
 
     people: TaggedPerson[] = [];
@@ -82,6 +93,15 @@ export default class MyPhoto extends Vue {
 
     get names() {
         return this.people.map(person => `${person.fname} ${person.lname}`).join(', ');
+    }
+
+    async created() {
+        const { data } = await isLiked(this.photo.photoID);
+        if (data.status === 200) {
+            this.liked = data.liked;
+        } else {
+            this.$error(data);
+        }
     }
 
     select(option: UserOption) {
@@ -124,6 +144,15 @@ export default class MyPhoto extends Vue {
             this.$error(data);
         }
     }
+
+    async handleLikePhoto() {
+        const { data } = await likePhoto(this.photo.photoID);
+        if (data.status === 200) {
+            this.liked = true;
+        } else {
+            this.$error(data);
+        }
+    }
 }
 </script>
 
@@ -132,6 +161,10 @@ export default class MyPhoto extends Vue {
 
     .active {
         color: $brand-color;
+    }
+
+    .like {
+        color: $danger-color;
     }
 
     .photo {

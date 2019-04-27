@@ -294,18 +294,39 @@ export interface TagRequest {
 interface GetTagData extends BaseData {
     tags: TagRequest[];
 }
-export function getTag() {
+export function getTag(): Promise<BaseResponse<GetTagData>> {
     return ajax({
         url: '/getTag',
     });
 }
 
-export function manageTag(photoID: number, response: number) {
+export function manageTag(photoID: number, response: number): Promise<BaseResponse<BaseData>> {
     return ajax({
         url: '/manageTag',
         data: {
             photoID,
             response,
+        },
+    });
+}
+
+interface IsLikedData extends BaseData {
+    liked: boolean;
+}
+export function isLiked(photoID: number): Promise<BaseResponse<IsLikedData>> {
+    return ajax({
+        url: '/isLiked',
+        data: {
+            photoID,
+        },
+    });
+}
+
+export function likePhoto(photoID: number): Promise<BaseResponse<BaseData>> {
+    return ajax({
+        url: '/like',
+        data: {
+            photoID,
         },
     });
 }
