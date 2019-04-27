@@ -12,7 +12,7 @@
                             :type="followBtnStyle"
                             :disabled="followBtnDisabled"
                             :loading="buttonLoading"
-                            @click="handleFollow">{{ followBtnText }}</el-button>
+                            @click="handleClick">{{ followBtnText }}</el-button>
                     </div>
                 </div>
             </div>
@@ -28,6 +28,7 @@ import {
     fetchUserInfo,
     getFollowState,
     followRequest,
+    unfollow,
 } from '@/service/api';
 import { resolveImagePath } from '@/utils/resolve-image-path';
 
@@ -70,7 +71,7 @@ export default class User extends Vue {
 
     get followBtnDisabled() {
         const state = this.user.followState;
-        return state === FollowState.Accepted || state === FollowState.Unaccepted;
+        return state === FollowState.Unaccepted;
     }
 
     get followBtnStyle() {
@@ -127,6 +128,34 @@ export default class User extends Vue {
                 }
             }
         });
+    }
+
+    handleClick() {
+        if (this.user.followState === FollowState.Unfollowed) {
+            this.handleFollow();
+        } else if (this.user.followState === FollowState.Accepted) {
+            this.handleUnfollow();
+        }
+    }
+
+    async handleUnfollow() {
+        const { username } = this.$route.params;
+        // @ts-ignore
+        await this.$confirm('You are unfollowing a person, continue?', 'Unfollow', {
+            confirmButtonText: 'Confirm',
+            cancelButtonText: 'Cancel',
+            type: 'warning',
+        });
+        const { data } = await unfollow(username);
+        if (data.status === 200) {
+            this.user.followState = FollowState.Unfollowed;
+            this.$message({
+                type: 'success',
+                message: `You have unfollowed ${username}.`,
+            });
+        } else {
+            this.$error(data);
+        }
     }
 
     async handleFollow(this: User) {

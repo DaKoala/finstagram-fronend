@@ -11,15 +11,18 @@
         </el-tabs>
         <el-table :data="tableData" v-loading="isLoading">
             <el-table-column :label="labelName" width="220">
-                <template slot-scope="scope" v-if="activeTab === 'follow'">
-                    <img class="follower__avatar" :src="scope.row.avatar" alt="avatar"/>
-                    <span class="follower__username">{{ scope.row.followerUsername }}</span>
-                </template>
-                <template slot-scope="scope" v-if="activeTab === 'tag'">
+                <template slot-scope="scope">
+                    <img class="follower__avatar"
+                         v-if="activeTab === 'follow'"
+                         :src="scope.row.avatar" alt="avatar"/>
+                    <span
+                        class="follower__username"
+                        v-if="activeTab === 'follow'">{{ scope.row.followerUsername }}</span>
                     <a
                         class="tag__link"
                         target="_blank"
-                        :href="scope.row.filePath">Photo #{{ scope.row.photoID }}</a>
+                        :href="scope.row.filePath"
+                        v-if="activeTab === 'tag'">Photo #{{ scope.row.photoID }}</a>
                 </template>
             </el-table-column>
             <el-table-column label="Actions" width="180">
@@ -46,7 +49,7 @@ import {
     Vue,
 } from 'vue-property-decorator';
 import {
-    Follower, TagRequest, manageRequest, showRequest, getTag, manageTag
+    Follower, TagRequest, manageRequest, showRequest, getTag, manageTag,
 } from '@/service/api';
 import { resolveImagePath } from '@/utils/resolve-image-path';
 

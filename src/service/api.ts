@@ -330,3 +330,12 @@ export function likePhoto(photoID: number): Promise<BaseResponse<BaseData>> {
         },
     });
 }
+
+export function unfollow(followee: string) {
+    return ajax({
+        url: '/unfollow',
+        data: {
+            followee,
+        },
+    });
+}
