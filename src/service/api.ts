@@ -355,3 +355,18 @@ export function getComment(photoID: number): Promise<BaseResponse<GetCommentData
         },
     });
 }
+
+interface PostCommentData extends BaseData {
+    commentText: string;
+}
+export function postComment(photoID: number, commentText: string):
+    Promise<BaseResponse<PostCommentData>> {
+    return ajax({
+        method: 'post',
+        url: '/postComment',
+        data: {
+            photoID,
+            commentText,
+        },
+    });
+}

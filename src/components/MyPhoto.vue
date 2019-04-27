@@ -55,6 +55,18 @@
                         <span class="comment__name">{{ comment.username }}: </span>
                         <span class="comment__content">{{ comment.commentText }}</span>
                     </p>
+                    <el-form>
+                        <el-form-item>
+                            <el-input
+                                type="textarea"
+                                :autosize="{minRows: 1, maxRows: 4}"
+                                placeholder="Comment here"
+                                v-model="commentText"></el-input>
+                        </el-form-item>
+                        <el-form-item>
+                            <el-button type="primary" @click="submitComment">Comment</el-button>
+                        </el-form-item>
+                    </el-form>
                 </template>
             </div>
         </div>
@@ -65,7 +77,7 @@
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import { resolveImagePath } from '@/utils/resolve-image-path';
 import {
-    TaggedPerson, Comment, tagPhoto, photoTag, isLiked, likePhoto, getComment,
+    TaggedPerson, Comment, tagPhoto, photoTag, isLiked, likePhoto, getComment, postComment,
 } from '@/service/api';
 import timeAgo from '@/utils/time-format';
 
@@ -94,6 +106,8 @@ export default class MyPhoto extends Vue {
     hasPeople = false;
 
     hasComment = false;
+
+    commentText = '';
 
     comments: Comment[] = [];
 
@@ -169,6 +183,30 @@ export default class MyPhoto extends Vue {
                 type: 'success',
             });
             this.usernameToTag = '';
+        } else {
+            this.$error(data);
+        }
+    }
+
+    async submitComment() {
+        if (this.commentText === '') {
+            this.$message({
+                type: 'error',
+                message: 'Comment cannot be empty!',
+            });
+            return;
+        }
+        const { data } = await postComment(this.photo.photoID, this.commentText);
+        if (data.status === 200) {
+            this.comments.unshift({
+                username: this.$store.state.username,
+                commentText: data.commentText,
+            });
+            this.commentText = '';
+            this.$message({
+                type: 'success',
+                message: 'Comment success!',
+            });
         } else {
             this.$error(data);
         }
