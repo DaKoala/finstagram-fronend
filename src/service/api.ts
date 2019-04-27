@@ -286,3 +286,26 @@ export function photoTag(photoID: number): Promise<BaseResponse<PhotoTagData>> {
         },
     });
 }
+
+export interface TagRequest {
+    filePath: string;
+    photoID: number;
+}
+interface GetTagData extends BaseData {
+    tags: TagRequest[];
+}
+export function getTag() {
+    return ajax({
+        url: '/getTag',
+    });
+}
+
+export function manageTag(photoID: number, response: number) {
+    return ajax({
+        url: '/manageTag',
+        data: {
+            photoID,
+            response,
+        },
+    });
+}
