@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import {
     faHeart as faHeartSolid,
     faTag,
+    faTags,
     faComment,
 } from '@fortawesome/free-solid-svg-icons';
 import {
@@ -16,6 +17,7 @@ import './plugins/element';
 
 library.add(
     faTag,
+    faTags,
     faHeartSolid,
     faHeartRegular,
     faComment,

@@ -270,3 +270,19 @@ export function tagPhoto(photoID: number, targetName: string): Promise<BaseRespo
         },
     });
 }
+
+export interface TaggedPerson {
+    fname: string;
+    lname: string;
+}
+interface PhotoTagData extends BaseData {
+    people: TaggedPerson[];
+}
+export function photoTag(photoID: number): Promise<BaseResponse<PhotoTagData>> {
+    return ajax({
+        url: '/photoTag',
+        data: {
+            photoID,
+        },
+    });
+}

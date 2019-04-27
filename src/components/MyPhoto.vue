@@ -23,6 +23,11 @@
             </div>
             <div class="extension__content">
                 <template v-if="option === 1">
+                    <font-awesome-icon
+                        v-if="people.length > 0"
+                        :icon="['fas', 'tags']"
+                        class="extension__icon"></font-awesome-icon>
+                    <span class="extension__name" v-if="people.length > 0">{{ names }}</span>
                     <el-form inline>
                         <el-form-item label="Who's in the photo?">
                             <el-input v-model="usernameToTag"></el-input>
@@ -40,8 +45,8 @@
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import { resolveImagePath } from '@/utils/resolve-image-path';
+import { TaggedPerson, tagPhoto, photoTag } from '@/service/api';
 import timeAgo from '@/utils/time-format';
-import { tagPhoto } from '@/service/api';
 
 enum UserOption {
     None,
@@ -63,6 +68,10 @@ export default class MyPhoto extends Vue {
 
     usernameToTag = '';
 
+    hasPeople = false;
+
+    people: TaggedPerson[] = [];
+
     get imageUrl() {
         return resolveImagePath(this.photo.filePath);
     }
@@ -71,11 +80,28 @@ export default class MyPhoto extends Vue {
         return timeAgo(this.photo.timestamp);
     }
 
+    get names() {
+        return this.people.map(person => `${person.fname} ${person.lname}`).join(', ');
+    }
+
     select(option: UserOption) {
         if (this.option === option) {
             this.option = UserOption.None;
         } else {
             this.option = option;
+            if (option === UserOption.Tag && !this.hasPeople) {
+                this.getTaggedPeople();
+            }
+        }
+    }
+
+    async getTaggedPeople() {
+        const { data } = await photoTag(this.photo.photoID);
+        if (data.status === 200) {
+            this.people = data.people;
+            this.hasPeople = true;
+        } else {
+            this.$error(data);
         }
     }
 
@@ -159,6 +185,11 @@ export default class MyPhoto extends Vue {
         color: $regular-text-color;
     }
 
+    .extension__icon {
+        vertical-align: middle;
+        color: $support-text-color;
+    }
+
     .extension__buttons svg {
         margin-right: 15px;
         cursor: pointer;
@@ -166,5 +197,12 @@ export default class MyPhoto extends Vue {
 
     .extension__content {
         margin-top: 10px;
+    }
+
+    .extension__name {
+        margin-left: 5px;
+        font-size: 16px;
+        font-weight: bold;
+        color: $main-text-color;
     }
 </style>
