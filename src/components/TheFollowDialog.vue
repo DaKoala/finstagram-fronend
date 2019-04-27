@@ -177,7 +177,6 @@ export default class TheFollowDialog extends Vue {
             await this.handleTagRequest(index, response);
         }
         this.isLoading = false;
-
     }
 }
 </script>

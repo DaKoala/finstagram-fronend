@@ -26,7 +26,10 @@
                     :class="{active: option === 1}"
                     @click="select(1)"
                 ></font-awesome-icon>
-                <font-awesome-icon :icon="['fas', 'comment']"></font-awesome-icon>
+                <font-awesome-icon
+                    :icon="['fas', 'comment']"
+                    :class="{active: option === 2}"
+                    @click="select(2)"></font-awesome-icon>
             </div>
             <div class="extension__content">
                 <template v-if="option === 1">
@@ -44,6 +47,15 @@
                         </el-form-item>
                     </el-form>
                 </template>
+                <template v-else-if="option === 2">
+                    <p
+                        class="comment"
+                        v-for="(comment, index) in comments"
+                        :key="index">
+                        <span class="comment__name">{{ comment.username }}: </span>
+                        <span class="comment__content">{{ comment.commentText }}</span>
+                    </p>
+                </template>
             </div>
         </div>
     </div>
@@ -53,14 +65,14 @@
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import { resolveImagePath } from '@/utils/resolve-image-path';
 import {
-    TaggedPerson, tagPhoto, photoTag, isLiked, likePhoto,
+    TaggedPerson, Comment, tagPhoto, photoTag, isLiked, likePhoto, getComment,
 } from '@/service/api';
 import timeAgo from '@/utils/time-format';
 
 enum UserOption {
     None,
     Tag,
-    Comment,
+    Comments,
 }
 
 @Component
@@ -80,6 +92,10 @@ export default class MyPhoto extends Vue {
     liked = false;
 
     hasPeople = false;
+
+    hasComment = false;
+
+    comments: Comment[] = [];
 
     people: TaggedPerson[] = [];
 
@@ -112,6 +128,9 @@ export default class MyPhoto extends Vue {
             if (option === UserOption.Tag && !this.hasPeople) {
                 this.getTaggedPeople();
             }
+            if (option === UserOption.Comments && !this.hasComment) {
+                this.getComment();
+            }
         }
     }
 
@@ -120,6 +139,16 @@ export default class MyPhoto extends Vue {
         if (data.status === 200) {
             this.people = data.people;
             this.hasPeople = true;
+        } else {
+            this.$error(data);
+        }
+    }
+
+    async getComment() {
+        const { data } = await getComment(this.photo.photoID);
+        if (data.status === 200) {
+            this.comments = data.comments;
+            this.hasComment = true;
         } else {
             this.$error(data);
         }
@@ -237,5 +266,19 @@ export default class MyPhoto extends Vue {
         font-size: 16px;
         font-weight: bold;
         color: $main-text-color;
+    }
+
+    .comment {
+        margin: 2px 0;
+        font-size: 14px;
+    }
+
+    .comment__name {
+        font-weight: bold;
+        color: $main-text-color;
+    }
+
+    .comment__content {
+        color: $regular-text-color;
     }
 </style>

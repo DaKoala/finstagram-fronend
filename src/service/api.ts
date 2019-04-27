@@ -331,11 +331,27 @@ export function likePhoto(photoID: number): Promise<BaseResponse<BaseData>> {
     });
 }
 
-export function unfollow(followee: string) {
+export function unfollow(followee: string): Promise<BaseResponse<BaseData>> {
     return ajax({
         url: '/unfollow',
         data: {
             followee,
+        },
+    });
+}
+
+export interface Comment {
+    username: string;
+    commentText: string;
+}
+interface GetCommentData extends BaseData {
+    comments: Comment[];
+}
+export function getComment(photoID: number): Promise<BaseResponse<GetCommentData>> {
+    return ajax({
+        url: '/getComment',
+        data: {
+            photoID,
         },
     });
 }
