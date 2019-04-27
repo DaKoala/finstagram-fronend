@@ -2,7 +2,10 @@
     <div class="photo">
         <div class="heading">
             <div class="heading__line heading__line--one">
-                <span class="heading__username">{{ photo.photoOwner }}</span>
+                <router-link
+                    class="heading__username" :to="'/user/' + photo.photoOwner">
+                    {{ photo.photoOwner }}
+                </router-link>
                 <span class="heading__support">{{ dateFormat }}</span>
                 <span class="heading__support">PhotoID: {{ photo.photoID }}</span>
             </div>
@@ -52,7 +55,9 @@
                         class="comment"
                         v-for="(comment, index) in comments"
                         :key="index">
-                        <span class="comment__name">{{ comment.username }}: </span>
+                        <router-link
+                            class="comment__name"
+                            :to="'/user/' + comment.username">{{ comment.username }}: </router-link>
                         <span class="comment__content">{{ comment.commentText }}</span>
                     </p>
                     <el-form>
@@ -264,6 +269,7 @@ export default class MyPhoto extends Vue {
         font-size: 18px;
         color: $main-text-color;
         font-weight: bold;
+        text-decoration: none;
     }
 
     .heading__support {
@@ -314,6 +320,7 @@ export default class MyPhoto extends Vue {
     .comment__name {
         font-weight: bold;
         color: $main-text-color;
+        text-decoration: none;
     }
 
     .comment__content {
