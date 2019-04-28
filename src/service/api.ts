@@ -370,3 +370,15 @@ export function postComment(photoID: number, commentText: string):
         },
     });
 }
+
+interface SearchByPosterData extends BaseData {
+    photos: Photo[];
+}
+export function searchByPoster(targetName: string): Promise<BaseResponse<SearchByPosterData>> {
+    return ajax({
+        url: '/searchByPoster',
+        data: {
+            targetName,
+        },
+    });
+}

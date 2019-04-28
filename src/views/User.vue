@@ -16,7 +16,22 @@
                     </div>
                 </div>
             </div>
+            <div class="poster">
+                <img
+                    v-for="(photo, index) in photos"
+                    class="poster__thumbnail"
+                    :src="imageUrl(photo.filePath)"
+                    :key="photo.photoID"
+                    :alt="photo.caption"
+                    @click="preview(index)"
+                    >
+            </div>
         </main>
+        <div class="mask" v-if="previewIndex > -1" @click="exitPreview">
+            <div class="photo-container" @click.stop>
+                <MyPhoto :photo="photos[previewIndex]"></MyPhoto>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -24,13 +39,16 @@
 import { Component, Watch, Vue } from 'vue-property-decorator';
 import TheNav from '@/components/TheNav.vue';
 import {
+    Photo,
     authorizeBeforeLoad,
     fetchUserInfo,
     getFollowState,
     followRequest,
     unfollow,
+    searchByPoster,
 } from '@/service/api';
 import { resolveImagePath } from '@/utils/resolve-image-path';
+import MyPhoto from '@/components/MyPhoto.vue';
 
 enum FollowState {
     Unaccepted,
@@ -40,6 +58,7 @@ enum FollowState {
 
 @Component({
     components: {
+        MyPhoto,
         TheNav,
     },
 })
@@ -57,6 +76,10 @@ export default class User extends Vue {
         avatar: '',
         followState: FollowState.Accepted,
     };
+
+    photos: Photo[] = [];
+
+    previewIndex = -1;
 
     get followBtnText() {
         const state = this.user.followState;
@@ -85,10 +108,34 @@ export default class User extends Vue {
     @Watch('$route.params.username')
     onUsernameChanged(this: User) {
         this.loadData();
+        this.loadPhotos();
     }
 
     created(this: User) {
         this.loadData();
+        this.loadPhotos();
+    }
+
+    // eslint-disable-next-line
+    imageUrl(filePath: string) {
+        return resolveImagePath(filePath);
+    }
+
+    preview(index: number) {
+        this.previewIndex = index;
+    }
+
+    exitPreview() {
+        this.previewIndex = -1;
+    }
+
+    async loadPhotos() {
+        const { data } = await searchByPoster(this.$route.params.username);
+        if (data.status === 200) {
+            this.photos = data.photos;
+        } else {
+            this.$error(data);
+        }
     }
 
     async loadData(this: User) {
@@ -205,5 +252,35 @@ export default class User extends Vue {
     .basic__username {
         font-size: 30px;
         margin-right: 20px;
+    }
+
+    .poster {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .poster__thumbnail {
+        margin: 20px;
+        width: 200px;
+        height: 200px;
+        object-fit: cover;
+        cursor: pointer;
+    }
+
+    .mask {
+        background-color: rgba(0, 0, 0, 0.4);
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 100vw;
+        height: 100vh;
+        overflow-y: scroll;
+    }
+
+    .photo-container {
+        margin: 50px auto 0 auto;
+        width: 100%;
+        max-width: 500px;
     }
 </style>
